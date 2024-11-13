@@ -22,7 +22,7 @@ def main():
     ignore_paths_abs = get_ignore_paths_abs(args.ignore_path, cwd_abs)
     print_file_tree(cwd_abs, ignore_paths_abs)
 
-    specified_files_abs = get_specified_files_abs(args.file_paths, cwd_abs)
+    specified_files_abs = get_specified_files(args.file_paths, cwd_abs)
     print_files_content(specified_files_abs, cwd_abs, ignore_paths_abs)
 
 def validate_cwd(cwd):
@@ -45,15 +45,49 @@ def print_file_tree(cwd_abs, ignore_paths_abs):
     root_node.mount(ignore_paths=ignore_paths_abs)
     root_node.print()
 
-def get_specified_files_abs(file_paths, cwd_abs):
-    specified_files_abs = []
+def get_specified_files(file_paths, cwd_abs):
+    specified_files = []
     for p in file_paths:
-        if os.path.isabs(p):
-            specified_files_abs.append(os.path.abspath(p))
+        # Parse line numbers if present
+        path = p
+        start_line = None
+        end_line = None
+        if ':' in p:
+            parts = p.rsplit(':', 2)
+            # parts can be [path], [path, start], or [path, start, end]
+            if len(parts) == 2:
+                path, start_line_str = parts
+                end_line_str = None
+            elif len(parts) == 3:
+                path, start_line_str, end_line_str = parts
+            else:
+                print(f"Error: Invalid line number format in '{p}'.")
+                sys.exit(1)
+            # Convert line numbers to integers
+            try:
+                if start_line_str != '':
+                    start_line = int(start_line_str)
+                else:
+                    start_line = None
+                if end_line_str is not None and end_line_str != '':
+                    end_line = int(end_line_str)
+                else:
+                    end_line = None
+            except ValueError:
+                print(f"Error: Invalid line number format in '{p}'. Line numbers must be integers.")
+                sys.exit(1)
         else:
-            specified_files_abs.append(os.path.abspath(os.path.join(cwd_abs, p)))
+            path = p
 
-    return specified_files_abs
+        # Get absolute path
+        if os.path.isabs(path):
+            abs_path = os.path.abspath(path)
+        else:
+            abs_path = os.path.abspath(os.path.join(cwd_abs, path))
+
+        specified_files.append({'path': abs_path, 'start_line': start_line, 'end_line': end_line})
+
+    return specified_files
 
 def print_files_content(specified_files_abs, cwd_abs, ignore_paths_abs):
     manager = FileContentManager(specified_files_abs, cwd_abs, ignore_paths_abs)
