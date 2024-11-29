@@ -1,5 +1,6 @@
 import os
 
+
 class FileChecker:
     def __init__(self, file_path, cwd_abs, ignore_paths_abs):
         self.file_path = file_path
@@ -9,7 +10,9 @@ class FileChecker:
 
     def is_displayable(self):
         if not self._is_within_tree():
-            self.warning = f"Warning: '{self.get_relative_path()}' is not under the specified cwd."
+            self.warning = (
+                f"Warning: '{self.get_relative_path()}' is not under the specified cwd."
+            )
             return False
 
         if not self._exists():
@@ -18,12 +21,20 @@ class FileChecker:
 
         if not self._is_file():
             if os.path.isdir(self.file_path):
-                self.warning = f"Warning: '{self.get_relative_path()}' is a directory, not a file."
+                self.warning = (
+                    f"Warning: '{self.get_relative_path()}' is a directory, not a file."
+                )
             else:
-                self.warning = f"Warning: '{self.get_relative_path()}' is not a regular file."
+                self.warning = (
+                    f"Warning: '{self.get_relative_path()}' is not a regular file."
+                )
             return False
 
-        return not self._is_under_ignored_path()
+        if self._is_under_ignored_path():
+            self.warning = f"Warning: '{self.get_relative_path()}' is under an ignored path and will not be displayed."
+            return False
+
+        return True
 
     def get_warning(self):
         return self.warning
@@ -46,6 +57,7 @@ class FileChecker:
                 return True
         return False
 
+
 class FilePrinter:
     def __init__(self, file_path, cwd_abs):
         self.file_path = file_path
@@ -61,9 +73,9 @@ class FilePrinter:
                 file_info += f" to line {end_line}"
 
         print(f"\n./{file_info}")
-        print('```')
+        print("```")
         try:
-            with open(self.file_path, 'r') as f:
+            with open(self.file_path, "r") as f:
                 lines = f.readlines()
                 total_lines = len(lines)
                 # Adjust start_line and end_line
@@ -83,14 +95,15 @@ class FilePrinter:
                 end_idx = min(end_idx - 1, total_lines)
 
                 if start_idx >= total_lines:
-                    content = ''
+                    content = ""
                 else:
-                    content = ''.join(lines[start_idx:end_idx])
+                    content = "".join(lines[start_idx:end_idx])
 
                 print(content)
         except Exception as e:
             print(f"Error reading file '{rel_path}': {e}")
-        print('```')
+        print("```")
+
 
 class FileContentManager:
     def __init__(self, specified_files, cwd_abs, ignore_paths_abs):
@@ -101,9 +114,9 @@ class FileContentManager:
 
     def process_files(self):
         for file_info in self.specified_files:
-            file_path = file_info['path']
-            start_line = file_info.get('start_line')
-            end_line = file_info.get('end_line')
+            file_path = file_info["path"]
+            start_line = file_info.get("start_line")
+            end_line = file_info.get("end_line")
             checker = FileChecker(file_path, self.cwd_abs, self.ignore_paths_abs)
             if checker.is_displayable():
                 printer = FilePrinter(file_path, self.cwd_abs)
