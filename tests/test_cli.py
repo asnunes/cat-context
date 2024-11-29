@@ -157,7 +157,7 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
         └── README.md
         
         Warning: 'nonexistent.txt' does not exist or is not a file."""
-        self.assertEqual(result.stdout.strip(), expected_tree.strip())
+        self.assertEqual(expected_tree.strip(), result.stdout.strip())
 
     def test_directory_as_file(self):
         # Test specifying a directory instead of a file
@@ -180,7 +180,8 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
 
     def test_file_outside_cwd(self):
         # Create a file outside the test directory
-        outside_file = os.path.join(self.original_cwd, "outside.txt")
+        new_temp_dir = tempfile.mkdtemp()
+        outside_file = os.path.join(new_temp_dir, "outside.txt")
         with open(outside_file, "w") as f:
             f.write("Content of outside.txt")
         try:
@@ -191,15 +192,15 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
                 text=True,
             )
             expected_tree = f"""/{os.path.basename(self.test_dir)}
-        ├── folder1
-        │   ├── file1.txt
-        │   └── file2.txt
-        ├── folder2
-        │   └── file3.txt
-        ├── file4.txt
-        └── README.md
-        
-        Warning: '{os.path.relpath(outside_file, self.test_dir)}' is not under the specified cwd."""
+    ├── folder1
+    │   ├── file1.txt
+    │   └── file2.txt
+    ├── folder2
+    │   └── file3.txt
+    ├── README.md
+    └── file4.txt
+
+Warning: '{os.path.relpath(outside_file, self.test_dir)}' is not under the specified cwd."""
             self.assertEqual(result.stdout.strip(), expected_tree.strip())
         finally:
             # Clean up the outside file
@@ -219,20 +220,19 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
             stdout=subprocess.PIPE,
             text=True,
         )
+
         expected_output = """
 ./README.md
-
 ```
 # README Content
 ```
 
 ./folder1/file1.txt
-
 ```
 Content of file1.txt
 ```
 """
-        self.assertEqual(result.stdout.strip(), expected_output.strip())
+        self.assertEqual(expected_output.strip(), result.stdout.strip())
 
     def test_ignore_tree_no_files(self):
         # Test using --ignore-tree without specified files
@@ -242,7 +242,7 @@ Content of file1.txt
             text=True,
         )
         expected_output = ""
-        self.assertEqual(result.stdout.strip(), expected_output.strip())
+        self.assertEqual(expected_output.strip(), result.stdout.strip())
 
 
 if __name__ == "__main__":

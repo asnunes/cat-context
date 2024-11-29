@@ -45,7 +45,7 @@ class FileChecker:
         return os.path.relpath(self.file_path, self.cwd_abs)
 
     def _is_within_tree(self):
-        return self.file_path.startswith(self.cwd_abs)
+        return os.path.commonpath([self.file_path, self.cwd_abs]) == self.cwd_abs
 
     def _exists(self):
         return os.path.exists(self.file_path)
@@ -86,23 +86,23 @@ class FilePrinter:
             with open(self.file_path, "r") as f:
                 lines = f.readlines()
                 total_lines = len(lines)
+
                 # Adjust start_line and end_line
-                # Line numbers start from 0 as per user's example
                 if start_line is None:
                     start_idx = 0
                 else:
-                    start_idx = start_line
+                    start_idx = start_line - 1  # Convert to 0-based index
+
                 if end_line is None:
                     end_idx = total_lines
                 else:
-                    # Since end_line is inclusive, add 1 to make it exclusive in slicing
-                    end_idx = end_line + 1
+                    end_idx = end_line  # end_line is inclusive
 
                 # Ensure indices are within bounds
-                start_idx = max(0, start_idx - 1)
-                end_idx = min(end_idx - 1, total_lines)
+                start_idx = max(0, start_idx)
+                end_idx = min(end_idx, total_lines)
 
-                if start_idx >= total_lines:
+                if start_idx >= end_idx:
                     content = ""
                 else:
                     content = "".join(lines[start_idx:end_idx])
@@ -131,4 +131,6 @@ class FileContentManager:
                 printer.print_content(start_line, end_line)
                 self.displayed_files.add(file_path)
             else:
-                print(checker.get_warning())
+                warning = checker.get_warning()
+                if warning:
+                    print(warning)
