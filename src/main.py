@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 import sys
 import argparse
@@ -9,8 +10,10 @@ def main():
     parser = argparse.ArgumentParser(description='Recursively print the file tree.')
     parser.add_argument('--cwd', type=str, default=os.getcwd(),
                         help='Change the current working directory.')
-    parser.add_argument('--ignore-path', action='append', default=[],
+    parser.add_argument('-ip', '--ignore-path', action='append', default=[],
                         help='Paths to ignore in the file tree (relative to cwd or absolute).')
+    parser.add_argument('-it', '--ignore-tree', action='store_true',
+                        help='Ignore the entire tree and only display specified files.')
     parser.add_argument('file_paths', nargs='*',
                         help='Files to display contents of if they exist in the tree.')
     args = parser.parse_args()
@@ -20,7 +23,9 @@ def main():
     cwd_abs = os.path.abspath(cwd)
 
     ignore_paths_abs = get_ignore_paths_abs(args.ignore_path, cwd_abs)
-    print_file_tree(cwd_abs, ignore_paths_abs)
+    ignore_tree = args.ignore_tree
+    if not ignore_tree:
+        print_file_tree(cwd_abs, ignore_paths_abs)
 
     specified_files_abs = get_specified_files(args.file_paths, cwd_abs)
     print_files_content(specified_files_abs, cwd_abs, ignore_paths_abs)

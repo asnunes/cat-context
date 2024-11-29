@@ -8,34 +8,43 @@ class FileChecker:
         self.warning = None
 
     def is_displayable(self):
-        # Check if file is within the tree
-        if not self.file_path.startswith(self.cwd_abs):
+        if not self._is_within_tree():
             self.warning = f"Warning: '{self.get_relative_path()}' is not under the specified cwd."
             return False
-        # Check if the path exists
-        if not os.path.exists(self.file_path):
+
+        if not self._exists():
             self.warning = f"Warning: '{self.get_relative_path()}' does not exist."
             return False
-        # Check if the path is a file
-        if not os.path.isfile(self.file_path):
+
+        if not self._is_file():
             if os.path.isdir(self.file_path):
                 self.warning = f"Warning: '{self.get_relative_path()}' is a directory, not a file."
             else:
                 self.warning = f"Warning: '{self.get_relative_path()}' is not a regular file."
             return False
-        # Check if the file is not under an ignored path
-        for ignore_path in self.ignore_paths_abs:
-            if self.file_path.startswith(ignore_path):
-                self.warning = f"Warning: '{self.get_relative_path()}' was not displayed (it is under an ignored path)."
-                return False
-        # File is displayable
-        return True
+
+        return not self._is_under_ignored_path()
 
     def get_warning(self):
         return self.warning
 
     def get_relative_path(self):
         return os.path.relpath(self.file_path, self.cwd_abs)
+
+    def _is_within_tree(self):
+        return self.file_path.startswith(self.cwd_abs)
+
+    def _exists(self):
+        return os.path.exists(self.file_path)
+
+    def _is_file(self):
+        return os.path.isfile(self.file_path)
+
+    def _is_under_ignored_path(self):
+        for ignore_path in self.ignore_paths_abs:
+            if self.file_path.startswith(ignore_path):
+                return True
+        return False
 
 class FilePrinter:
     def __init__(self, file_path, cwd_abs):

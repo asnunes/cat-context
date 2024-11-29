@@ -29,15 +29,16 @@ class FolderNode(FileSystemNode):
         self.children = []
 
     def mount(self, ignore_paths=[]):
-        # Check if this path should be ignored
         if os.path.abspath(self.path) in ignore_paths:
-            return  # Do not mount this node
+            return
+
         items = sorted([item for item in os.listdir(self.path) if not item.startswith('.')])
         for item in items:
             full_path = os.path.join(self.path, item)
             item_abs_path = os.path.abspath(full_path)
             if item_abs_path in ignore_paths:
-                continue  # Skip this item
+                continue
+
             if os.path.isdir(full_path):
                 node = FolderNode(item, full_path)
                 node.mount(ignore_paths=ignore_paths)
