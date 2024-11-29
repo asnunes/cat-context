@@ -43,13 +43,13 @@ ctx [OPTIONS] [FILE_PATHS...]
 #### Display the file tree and the contents of specific files
 
 ```bash
-ctx README.md src/main.py
+ctx README.md ctx/main.py
 ```
 
 #### Display contents of specific lines in a file (e.g., lines 10 to 20)
 
 ```bash
-ctx src/main.py:10:20
+ctx ctx/main.py:10:20
 ```
 
 #### Ignore the tree and only display contents of specified files
@@ -105,13 +105,13 @@ ctx [OPTIONS] [FILE_PATHS...]
 Or directly via Python:
 
 ```bash
-python src/main.py [OPTIONS] [FILE_PATHS...]
+python ctx/main.py [OPTIONS] [FILE_PATHS...]
 ```
 
 ### Example
 
 ```bash
-python src/main.py --cwd=. README.md
+python ctx/main.py --cwd=. README.md
 ```
 
 ## Running Tests

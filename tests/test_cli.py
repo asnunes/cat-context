@@ -30,7 +30,7 @@ class TestFileTreeCLI(unittest.TestCase):
         self.script_path = os.path.join(
             self.original_cwd,
             "..",
-            "src",
+            "ctx",
             "main.py",
         )
 
