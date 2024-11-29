@@ -3,8 +3,8 @@
 import os
 import sys
 import argparse
-from file_tree import RootNode
-from file_content import FileContentManager
+from .file_tree import RootNode
+from .file_content import FileContentManager
 
 
 def main():
