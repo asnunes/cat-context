@@ -134,6 +134,7 @@ Content of file3.txt
     └── file4.txt
 """
         expected_content = """
+
 Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
 """
         expected_output = expected_tree.strip() + expected_content
@@ -154,6 +155,7 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
         │   └── file3.txt
         ├── file4.txt
         └── README.md
+        
         Warning: 'nonexistent.txt' does not exist or is not a file."""
         self.assertEqual(result.stdout.strip(), expected_tree.strip())
 
@@ -172,6 +174,7 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
         │   └── file3.txt
         ├── file4.txt
         └── README.md
+        
         Warning: 'folder1' is a directory, not a file."""
         self.assertEqual(result.stdout.strip(), expected_tree.strip())
 
@@ -195,6 +198,7 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
         │   └── file3.txt
         ├── file4.txt
         └── README.md
+        
         Warning: '{os.path.relpath(outside_file, self.test_dir)}' is not under the specified cwd."""
             self.assertEqual(result.stdout.strip(), expected_tree.strip())
         finally:

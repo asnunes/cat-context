@@ -10,28 +10,30 @@ class FileChecker:
 
     def is_displayable(self):
         if not self._is_within_tree():
-            self.warning = (
-                f"Warning: '{self.get_relative_path()}' is not under the specified cwd."
+            self._append_warning(
+                f"'{self.get_relative_path()}' is not under the specified cwd."
             )
             return False
 
         if not self._exists():
-            self.warning = f"Warning: '{self.get_relative_path()}' does not exist."
+            self._append_warning(f"'{self.get_relative_path()}' does not exist.")
             return False
 
         if not self._is_file():
             if os.path.isdir(self.file_path):
-                self.warning = (
-                    f"Warning: '{self.get_relative_path()}' is a directory, not a file."
+                self._append_warning(
+                    f"'{self.get_relative_path()}' is a directory, not a file."
                 )
             else:
-                self.warning = (
-                    f"Warning: '{self.get_relative_path()}' is not a regular file."
+                self._append_warning(
+                    f"'{self.get_relative_path()}' is not a regular file."
                 )
             return False
 
         if self._is_under_ignored_path():
-            self.warning = f"Warning: '{self.get_relative_path()}' is under an ignored path and will not be displayed."
+            self._append_warning(
+                f"'{self.get_relative_path()}' is under an ignored path and will not be displayed."
+            )
             return False
 
         return True
@@ -56,6 +58,12 @@ class FileChecker:
             if self.file_path.startswith(ignore_path):
                 return True
         return False
+
+    def _append_warning(self, warning):
+        if self.warning is None:
+            self.warning = ""
+
+        self.warning += f"\nWarning: {warning}"
 
 
 class FilePrinter:
