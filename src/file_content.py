@@ -121,6 +121,8 @@ class FileContentManager:
         self.displayed_files = set()
 
     def process_files(self):
+        any_files_displayed = False
+
         for file_info in self.specified_files:
             file_path = file_info["path"]
             start_line = file_info.get("start_line")
@@ -130,7 +132,10 @@ class FileContentManager:
                 printer = FilePrinter(file_path, self.cwd_abs)
                 printer.print_content(start_line, end_line)
                 self.displayed_files.add(file_path)
+                any_files_displayed = True
             else:
                 warning = checker.get_warning()
                 if warning:
                     print(warning)
+
+        return any_files_displayed

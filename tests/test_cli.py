@@ -241,7 +241,7 @@ Content of file1.txt
             stdout=subprocess.PIPE,
             text=True,
         )
-        expected_output = ""
+        expected_output = "Warning: No content to display."
         self.assertEqual(expected_output.strip(), result.stdout.strip())
 
 
