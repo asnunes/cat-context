@@ -1,8 +1,8 @@
-# ctx
+# cat-context
 
 Have you ever wanted to ask a question about a project to a LLM but lost a lot of time trying to explain the structure of the project and the relevant files? 
 
-`ctx` is a command-line tool that allows you to recursively print the file tree of a specified directory, display contents of specified files, and ignore certain paths or the entire tree. It's useful for quickly understanding the structure and content of a project in the context of a question.
+`cctx` is a command-line tool that allows you to recursively print the file tree of a specified directory, display contents of specified files, and ignore certain paths or the entire tree. It's useful for quickly understanding the structure and content of a project in the context of a question.
 
 ## Features
 
@@ -14,18 +14,18 @@ Have you ever wanted to ask a question about a project to a LLM but lost a lot o
 
 ## Installation
 
-You can install `ctx` via pip:
+You can install `cat-context` via pip:
 
 ```bash
-pip install ctx
+pip install cat-context
 ```
 
-This will install the `ctx` package and make the `ctx` command available globally.
+This will install the `cat-context` package and make the `cctx` command available globally.
 
 ## Usage
 
 ```bash
-ctx [OPTIONS] [FILE_PATHS...]
+cctx [OPTIONS] [FILE_PATHS...]
 ```
 
 ### Options
@@ -43,31 +43,31 @@ ctx [OPTIONS] [FILE_PATHS...]
 #### Display the file tree and the contents of specific files
 
 ```bash
-ctx README.md ctx/main.py
+cctx README.md cctx/main.py
 ```
 
 #### Display contents of specific lines in a file (e.g., lines 10 to 20)
 
 ```bash
-ctx ctx/main.py:10:20
+cctx cctx/main.py:10:20
 ```
 
 #### Ignore the tree and only display contents of specified files
 
 ```bash
-ctx --ignore-tree README.md
+cctx --ignore-tree README.md
 ```
 
 #### Ignore specific paths when displaying the tree
 
 ```bash
-ctx --ignore-path=folder1 --ignore-path=folder2
+cctx --ignore-path=folder1 --ignore-path=folder2
 ```
 
 #### Display the file tree of a specified directory
 
 ```bash
-ctx --cwd=/path/to/directory
+cctx --cwd=/path/to/directory
 ```
 
 ## Development
@@ -78,7 +78,7 @@ If you want to run `ctx` in development mode or contribute to the project, follo
 
 ```bash
 git clone https://github.com/asnunes/ctx.git
-cd ctx
+cd cctx
 ```
 
 ### Install dependencies
@@ -99,19 +99,19 @@ pip install -e .
 ### Run the script
 
 ```bash
-ctx [OPTIONS] [FILE_PATHS...]
+cctx [OPTIONS] [FILE_PATHS...]
 ```
 
 Or directly via Python:
 
 ```bash
-python ctx/main.py [OPTIONS] [FILE_PATHS...]
+python cctx/main.py [OPTIONS] [FILE_PATHS...]
 ```
 
 ### Example
 
 ```bash
-python ctx/main.py --cwd=. README.md
+python cctx/main.py --cwd=. README.md
 ```
 
 ## Running Tests
