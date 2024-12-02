@@ -1,0 +1,22 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: |
+          make docker-test-build
+
+      - name: Run Tests in Docker
+        run: |
+          make docker-test-run

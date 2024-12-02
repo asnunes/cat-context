@@ -1,1 +1,4 @@
 include README.md
+include LICENSE
+recursive-include ctx *.py
+recursive-exclude tests *

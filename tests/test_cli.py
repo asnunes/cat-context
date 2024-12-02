@@ -92,15 +92,16 @@ class TestFileTreeCLI(unittest.TestCase):
             text=True,
         )
         expected_tree = f"""/{os.path.basename(self.test_dir)}
-├── folder1
-│   ├── file1.txt
-│   └── file2.txt
-├── folder2
-│   └── file3.txt
-├── file4.txt
-└── README.md
+    ├── folder1
+    │   ├── file1.txt
+    │   └── file2.txt
+    ├── folder2
+    │   └── file3.txt
+    ├── README.md
+    └── file4.txt
 """
         expected_content = """
+
 ./README.md
 ```
 # README Content
@@ -148,15 +149,15 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
             text=True,
         )
         expected_tree = f"""/{os.path.basename(self.test_dir)}
-        ├── folder1
-        │   ├── file1.txt
-        │   └── file2.txt
-        ├── folder2
-        │   └── file3.txt
-        ├── file4.txt
-        └── README.md
-        
-        Warning: 'nonexistent.txt' does not exist or is not a file."""
+    ├── folder1
+    │   ├── file1.txt
+    │   └── file2.txt
+    ├── folder2
+    │   └── file3.txt
+    ├── README.md
+    └── file4.txt
+
+Warning: 'nonexistent.txt' does not exist."""
         self.assertEqual(expected_tree.strip(), result.stdout.strip())
 
     def test_directory_as_file(self):
@@ -167,16 +168,16 @@ Warning: 'folder1/file1.txt' is under an ignored path and will not be displayed.
             text=True,
         )
         expected_tree = f"""/{os.path.basename(self.test_dir)}
-        ├── folder1
-        │   ├── file1.txt
-        │   └── file2.txt
-        ├── folder2
-        │   └── file3.txt
-        ├── file4.txt
-        └── README.md
-        
-        Warning: 'folder1' is a directory, not a file."""
-        self.assertEqual(result.stdout.strip(), expected_tree.strip())
+    ├── folder1
+    │   ├── file1.txt
+    │   └── file2.txt
+    ├── folder2
+    │   └── file3.txt
+    ├── README.md
+    └── file4.txt
+
+Warning: 'folder1' is a directory, not a file."""
+        self.assertEqual(expected_tree.strip(), result.stdout.strip())
 
     def test_file_outside_cwd(self):
         # Create a file outside the test directory
