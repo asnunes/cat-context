@@ -1,4 +1,4 @@
-.PHONY: test build clean publish docker-test
+.PHONY: test build clean publish docker-test-build docker-test-run
 
 test:
 	python -m unittest discover tests
@@ -15,6 +15,8 @@ clean:
 publish: build
 	twine upload dist/*
 
-docker-test:
+docker-test-build:
 	docker build -t ctx-test -f Dockerfile.test .
+
+docker-test-run:
 	docker run --rm ctx-test
